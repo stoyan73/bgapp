@@ -1,0 +1,1799 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DigitalOnboarding External API",
+    "description": "This is External API for digital onboarding <br/><hr>",
+    "contact": {
+      "name": "support@postbank.bg",
+      "email": "support@postbank.bg"
+    },
+    "version": "1.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://instant.tglb.postbank.bg/onboarding/v1"
+    }
+  ],
+  "paths": {
+    "/user/check": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "User check",
+        "description": "Check for existing Evrotrust user<br/><br/><b>\"user\"</b>: only one of the parameters has to be sent.<br/> \"country\": This parameter will be used only if \"identificationNumber\" is sent. Valid values are the ISO 3166-1 alpha-2 codes. It is optional parameter and if it is not send, the default value will be applied which is \"BG\".",
+        "operationId": "checkUser",
+        "requestBody": {
+          "description": "Evrotrust user check",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserIdentifyData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "User found",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "438": {
+            "description": "User not found",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/user/check/extended": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "User check",
+        "description": "Returns information about Evrotrust user identification status: is registered, is identified, has confirmed phone, has confirmed email and if identification is confirmed by supervisor<br/>",
+        "operationId": "checkUserExtended",
+        "requestBody": {
+          "description": "User info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserIdentifyData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User checks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultUserExtendedCheck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/user/data": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get User Data from exctracted identification document",
+        "description": "Returns information about User",
+        "operationId": "getUserData",
+        "requestBody": {
+          "description": "User info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserIdentifyData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDataObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/user/identification/status": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Status of user",
+        "description": "Callback  status of user",
+        "operationId": "userStatus",
+        "requestBody": {
+          "description": "User info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserStatus"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/user/check/bankcustomer": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Bank customer check",
+        "description": "Returns information about customer status: is bank customer, is blacklisted, has valid EGN, is over 18 years old<br/>",
+        "operationId": "checkCustomerExtended",
+        "requestBody": {
+          "description": "Customer info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserIdentifyData"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Customer checks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultUserExtendedCheckCSoft"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/codifications/countries": {
+      "get": {
+        "summary": "Get Countries",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getCountriesNom",
+        "description": "Returns a list of all countries from NM177.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Country": {
+                        "$ref": "#/components/schemas/Codification"
+                      },
+                      "NumericISOCode": {
+                        "type": "string",
+                        "description": "Country code in format ISO 3166-1 (numeric) "
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/educationDegrees": {
+      "get": {
+        "summary": "Get Education Degrees",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getEducationDegreesNom",
+        "description": "Returns a list of all education degrees from NM242.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/expectedTransactionsAmounts": {
+      "get": {
+        "summary": "Get Expected Transactions Amounts",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getExpectedTransactionsAmountsNom",
+        "description": "Returns a list of all values from the nomenclature for expected transactions amounts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/expectedTransactionsTypes": {
+      "get": {
+        "summary": "Get Expected Transactions Types",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getBankOperationTypesNom",
+        "description": "Returns a list of all values from the nomenclature for bank operation types",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/expectedTransactionsTypesAndAmounts/{CustomerType}": {
+      "get": {
+        "summary": "Get Expected Transactions Types and Amounts",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "AcquireExpectedTransactionsTypesAndAmounts",
+        "description": "Returns a list of transactions types with amounts from NM630, NM631, NM632, NM633",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "TransactionType": {
+                        "type": "string",
+                        "description": "Transaction Type. Possible values: CashIn, CashOut, ReceivedTransfers, OrderedTransfers."
+                      },
+                      "Amounts": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Codification"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Example": {
+                    "value": [
+                      {
+                        "TransactionType": "string",
+                        "Amounts": [
+                          {
+                            "Value": 0,
+                            "Name": "string"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "enum": [
+              "Individuals",
+              "LegalEntities"
+            ]
+          },
+          "name": "CustomerType",
+          "in": "path",
+          "required": true,
+          "description": "Customer Type. Allowed values: Individuals, LegalEntities."
+        }
+      ]
+    },
+    "/codifications/jobTitles": {
+      "get": {
+        "summary": "Get Job Titles",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getJobTitlesNom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "JobTitle": {
+                        "$ref": "#/components/schemas/Codification"
+                      },
+                      "ProfessionalArea": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Codification"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns a list of all job titles from nomenclature 241 and the related professional areas from nomenclature 208"
+      }
+    },
+    "/codifications/municipalities": {
+      "get": {
+        "summary": "Get Municipalities",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getMunicipalitiesNom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns a list of all municipalities from NM431."
+      }
+    },
+    "/codifications/populatedPlaces": {
+      "get": {
+        "summary": "Get Populated Places",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getPopulatedPlacesNom",
+        "description": "Returns a list of all populated places from NM432.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "PopulatedPlace": {
+                        "$ref": "#/components/schemas/Codification"
+                      },
+                      "PostalCode": {
+                        "type": "string",
+                        "description": "Postal code of the populated place"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/populatedPlaces/{MunicipalityID}": {
+      "get": {
+        "summary": "Get Populated Places By Municipality ID",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getPopulatedPlacesNomByMunicipalityID",
+        "description": "Returns a list of populated places from NM432 by Municipality ID.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "PopulatedPlace": {
+                        "$ref": "#/components/schemas/Codification"
+                      },
+                      "PostalCode": {
+                        "type": "string",
+                        "description": "Postal code of the populated place"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "integer"
+          },
+          "name": "MunicipalityID",
+          "in": "path",
+          "description": "Municipality ID in VCSBank",
+          "required": true
+        }
+      ]
+    },
+    "/codifications/professions": {
+      "get": {
+        "summary": "Get Professions",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getProfessionsNom",
+        "description": "Returns a list of all professions from NM207.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/professions/{ProfessionAreaID}": {
+      "get": {
+        "summary": "Get Professions By Profession Area ID",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getProfessionsNomByProfessionAreaID",
+        "description": "Returns a list of professions from NM207 by Profession area ID.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "integer"
+          },
+          "name": "ProfessionAreaID",
+          "in": "path",
+          "description": "Profession Area ID in VCSBank",
+          "required": true
+        }
+      ]
+    },
+    "/codifications/relationshipPurposes": {
+      "get": {
+        "summary": "Get Relationship Purposes",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getRelationshipPurposesNom",
+        "description": "Returns a list of all relationship purposes from NM629.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/codifications/sourcesOfFunds": {
+      "get": {
+        "summary": "Get Sources of Funds",
+        "tags": [
+          "Codifications"
+        ],
+        "operationId": "getSourcesOfFundsNom",
+        "description": "Returns a list of all sources of funds from NM589.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Codification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mockup/getusermockupdata": {
+      "get": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "Get mockup test responses",
+        "operationId": "getUserMockupData",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/mockup/getdocumentmockupdata": {
+      "get": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "Get mockup test responses",
+        "operationId": "getDocumentMockupData",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/mockup/resetdata": {
+      "get": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "reset  mockup data to the config file",
+        "operationId": "resetMockupData",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/mockup/updateuser": {
+      "post": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "Update mockup test responses",
+        "operationId": "updateUserMockupData",
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/mockup/updatdocument": {
+      "post": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "Update mockup test responses",
+        "operationId": "updateDocumentMockupData",
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/mockup/adduserdata": {
+      "post": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "Update mockup test responses",
+        "operationId": "addUserMockupData",
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/mockup/adddocumentdata": {
+      "post": {
+        "tags": [
+          "mockup"
+        ],
+        "summary": "Update mockup test responses",
+        "operationId": "addDocumentMockupData",
+        "requestBody": {
+          "content": {
+            "application/json": {}
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/document/ready": {
+      "post": {
+        "tags": [
+          "document"
+        ],
+        "summary": "Callback document ready",
+        "description": "Document ready. Valid status values:<br/>\"status: 1 - Pending, 2 - Signed, 3 - Rejected, 4 - Expired, 5 - Failed, 6 - Withdrawn, 99 - On hold. The callback is triggered only on Signed and Rejected statuses.<br/>Reject reason: optional string, may present if the status is Rejected.<br/>",
+        "operationId": "readyDocument",
+        "requestBody": {
+          "description": "Document info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataDocumentReady"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/document/doc/online": {
+      "post": {
+        "tags": [
+          "document"
+        ],
+        "summary": "Send file to Evrotrust users",
+        "description": "Valid values:<br/><b>document:</b> upload  pdf files.<br/><br/><b>data:</b><br/><b>\"document:\"</b><br/>\"description\": max chars 4000<br/>\"dateExpire\": timestamp<br/>\"coverage\": 0, 500, 20000, 100000, 250000. The amount is in euro. 0 stands for unlimited.<br/>\"certificateType\": \"integer\" valid values 1 - Е-Sign Qualified; 2 - E-Sign Advanced; If certificateType is 2, only coverage 500 is accepted.<br/> \"preview\": 0/1 whether the document requires previewing before signing<br/>  <b>\"urlCallback\":</b> \"string\"  Optional parameter. It has to be sent a host name if Evrotrust Vendor callback API is used.<br/> <b>\"user\"</b>: only one of the parameters has to be sent. Maximum users are 15.<br/> \"country\": This parameter will be used only if \"identificationNumber\" is sent. Valid values are the ISO 3166-1 alpha-2 codes. It is optional parameter and if it is not send, the default value will be applied which is \"BG\".<br/><br/><br/>Return values:<br/><b>\"threadID\"</b><br/>Unique ID refers to the signing operation.<br/><b>\"transactionID\"</b><br/>Unique ID refers to a single document of the signing operation.<br/><br/>For example: One document send to be signed by two users. Every user will have a different transactionID, but the same threadID.<br/>",
+        "operationId": "addDocumentDoc",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "document",
+                  "data"
+                ],
+                "properties": {
+                  "document": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "data": {
+                    "$ref": "#/components/schemas/DocumentRequestData"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Document added success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDocumentTransaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "438": {
+            "description": "User not found",
+            "content": {}
+          },
+          "450": {
+            "description": "File exceeds max allowed file size",
+            "content": {}
+          },
+          "454": {
+            "description": "Incorrect coverage",
+            "content": {}
+          },
+          "457": {
+            "description": "Not supported file types",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/document/doc/identification": {
+      "post": {
+        "tags": [
+          "document"
+        ],
+        "summary": "Send request to Evrotrust user to confirm their personal data",
+        "operationId": "signDocCertAttribute",
+        "requestBody": {
+          "description": "Document info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataAttrCertDocument"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Document added success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "438": {
+            "description": "User not found",
+            "content": {}
+          },
+          "449": {
+            "description": "User data is not valid",
+            "content": {}
+          },
+          "454": {
+            "description": "Incorrect coverage",
+            "content": {}
+          },
+          "469": {
+            "description": "The request can not be processed. Try again in 60 seconds.",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/document/group/ready": {
+      "post": {
+        "tags": [
+          "group"
+        ],
+        "summary": "Document group ready callback",
+        "description": "Document group ready. Valid status values:<br/>\"status: 1 - Pending, 2 - Signed, 3 - Rejected, 4 - Expired, 5 - Failed, 6 - Withdrawn, 99 - On hold. The callback is triggered only on Signed and Rejected statuses.<br/>Reject reason: optional string, may present if the status is Rejected.<br/>",
+        "operationId": "readyGroupDocument",
+        "requestBody": {
+          "description": "Document info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataDocumentGroupReady"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/sendnotification": {
+      "post": {
+        "tags": [
+          "notification"
+        ],
+        "summary": "Send Email Notificaton",
+        "description": "Send email notification<br/>",
+        "operationId": "sendNotification",
+        "requestBody": {
+          "description": "Document info",
+          "content": {
+            "application/json": {}
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/submitToDB": {
+      "post": {
+        "tags": [
+          "DB"
+        ],
+        "summary": "Write data in internal DB",
+        "description": "Write data in internal DB <br/>",
+        "operationId": "writeToDB",
+        "requestBody": {
+          "description": "Document info",
+          "content": {
+            "application/json": {}
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success",
+            "content": {}
+          },
+          "400": {
+            "description": "Invalid data supplied",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserIdentifyData": {
+        "type": "object",
+        "required": [
+          "identificationNumber"
+        ],
+        "properties": {
+          "identificationNumber": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "DataDocumentReady": {
+        "type": "object",
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectReason": {
+            "type": "string"
+          }
+        }
+      },
+      "DataDocumentGroupReady": {
+        "type": "object",
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectReason": {
+            "type": "string"
+          }
+        }
+      },
+      "DocumentRequestData": {
+        "type": "object",
+        "required": [
+          "document",
+          "users"
+        ],
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/DocumentObject"
+          },
+          "urlCallback": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserIdentifyData"
+            }
+          }
+        }
+      },
+      "DocumentsRequestData": {
+        "type": "object",
+        "required": [
+          "documents",
+          "groupDescription",
+          "certificateType",
+          "coverage",
+          "dateExpire",
+          "users"
+        ],
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShortDocumentObject"
+            }
+          },
+          "groupDescription": {
+            "type": "string"
+          },
+          "certificateType": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "coverage": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              500,
+              20000,
+              100000,
+              250000
+            ]
+          },
+          "dateExpire": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "urlCallback": {
+            "type": "string"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserIdentifyData"
+            }
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          },
+          "identificationNumber": {
+            "type": "string"
+          },
+          "country": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "StatusThreads": {
+        "type": "object",
+        "properties": {
+          "groupTransactionID": {
+            "type": "string"
+          },
+          "groupIsProcessing": {
+            "type": "boolean"
+          },
+          "groupStatus": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectReason": {
+            "type": "string"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentThreadStatus"
+            }
+          }
+        }
+      },
+      "DocumentThreadStatus": {
+        "type": "object",
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          },
+          "isProcessing": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ResultDocumentTransactionGroup": {
+        "type": "object",
+        "properties": {
+          "threadID": {
+            "type": "string"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          }
+        }
+      },
+      "ResultDocumentTransaction": {
+        "type": "object",
+        "properties": {
+          "threadID": {
+            "type": "string"
+          },
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
+            }
+          }
+        }
+      },
+      "ResultUserExtendedCheckCSoft": {
+        "type": "object",
+        "properties": {
+          "isBankCustomer": {
+            "type": "boolean"
+          },
+          "isValidEGN": {
+            "type": "boolean"
+          },
+          "isOver18": {
+            "type": "string"
+          },
+          "isBlacklisted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ResultUserExtendedCheck": {
+        "type": "object",
+        "properties": {
+          "isRegistered": {
+            "type": "boolean"
+          },
+          "isIdentified": {
+            "type": "boolean"
+          },
+          "isRejected": {
+            "type": "boolean"
+          },
+          "isSupervised": {
+            "type": "boolean"
+          },
+          "isReadyToSign": {
+            "type": "boolean"
+          },
+          "hasConfirmedPhone": {
+            "type": "boolean"
+          },
+          "hasConfirmedEmail": {
+            "type": "boolean"
+          },
+          "isBlacklisted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Codification": {
+        "type": "object",
+        "properties": {
+          "Value": {
+            "type": "integer"
+          },
+          "Name": {
+            "type": "string"
+          }
+        }
+      },
+      "DataDocumentStatus": {
+        "type": "object",
+        "required": [
+          "transactionID"
+        ],
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "DataDocumentThreadStatus": {
+        "type": "object",
+        "properties": {
+          "threadID": {
+            "type": "string"
+          }
+        }
+      },
+      "ResultDocumentStatus": {
+        "type": "object",
+        "properties": {
+          "isProcessing": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectReason": {
+            "type": "string"
+          }
+        }
+      },
+      "ResultDocumentThreadStatus": {
+        "type": "object",
+        "properties": {
+          "statuses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatusThreads"
+            }
+          }
+        }
+      },
+      "DataDocumentGroupStatus": {
+        "type": "object",
+        "required": [
+          "transactionID"
+        ],
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "ResultDocumentGroupStatus": {
+        "type": "object",
+        "properties": {
+          "isProcessing": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rejectReason": {
+            "type": "string"
+          }
+        }
+      },
+      "DataDocumentDownload": {
+        "type": "object",
+        "required": [
+          "transactionID"
+        ],
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "DataDocumentGroupDownload": {
+        "type": "object",
+        "required": [
+          "transactionID"
+        ],
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "DataAttrCertDocument": {
+        "type": "object",
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/DocumentAttr"
+          },
+          "includes": {
+            "$ref": "#/components/schemas/Includes"
+          },
+          "identificationReason": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserIdentifyData"
+          }
+        }
+      },
+      "DocumentAttr": {
+        "type": "object",
+        "properties": {
+          "dateExpire": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SignInfo": {
+        "type": "object",
+        "required": [
+          "type",
+          "algorithm"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "PDF1",
+              "PDF2",
+              "XML1",
+              "XML2",
+              "XML3",
+              "XML4",
+              "CAD1",
+              "CAD2"
+            ],
+            "default": "PDF1"
+          },
+          "algorithm": {
+            "type": "string",
+            "enum": [
+              "SHA256"
+            ]
+          }
+        }
+      },
+      "DocumentObject": {
+        "type": "object",
+        "required": [
+          "dateExpire",
+          "certificateType",
+          "preview",
+          "coverage"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "dateExpire": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "certificateType": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "preview": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "coverage": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              500,
+              20000,
+              100000,
+              250000
+            ]
+          },
+          "checksumDocument": {
+            "type": "string"
+          }
+        }
+      },
+      "ShortDocumentObject": {
+        "type": "object",
+        "required": [
+          "description",
+          "optional",
+          "preview"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "optional": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "preview": {
+            "type": "integer",
+            "format": "int32",
+            "enum": [
+              0,
+              1
+            ]
+          }
+        }
+      },
+      "ResultDocument": {
+        "type": "object",
+        "properties": {
+          "transactionID": {
+            "type": "string"
+          },
+          "threadID": {
+            "type": "string"
+          }
+        }
+      },
+      "Includes": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "type": "boolean"
+          },
+          "latinNames": {
+            "type": "boolean"
+          },
+          "emails": {
+            "type": "boolean"
+          },
+          "phones": {
+            "type": "boolean"
+          },
+          "address": {
+            "type": "boolean"
+          },
+          "documentType": {
+            "type": "boolean"
+          },
+          "documentNumber": {
+            "type": "boolean"
+          },
+          "documentIssuerName": {
+            "type": "boolean"
+          },
+          "documentValidDate": {
+            "type": "boolean"
+          },
+          "documentIssueDate": {
+            "type": "boolean"
+          },
+          "documentCountry": {
+            "type": "boolean"
+          },
+          "identificationNumber": {
+            "type": "boolean"
+          },
+          "gender": {
+            "type": "boolean"
+          },
+          "nationality": {
+            "type": "boolean"
+          },
+          "documentPicture": {
+            "type": "boolean"
+          },
+          "documentSignature": {
+            "type": "boolean"
+          },
+          "picFront": {
+            "type": "boolean"
+          },
+          "picBack": {
+            "type": "boolean"
+          },
+          "picIDCombined": {
+            "type": "boolean"
+          },
+          "dateOfBirth": {
+            "type": "boolean"
+          },
+          "placeOfBirth": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserDataObject": {
+        "type": "object",
+        "properties": {
+          "names": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "latinNames": {
+            "type": "string"
+          },
+          "firstNameLatin": {
+            "type": "string"
+          },
+          "middleNameLatin": {
+            "type": "string"
+          },
+          "lastNameLatin": {
+            "type": "string"
+          },
+          "emails": {
+            "type": "string"
+          },
+          "phones": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "municipality": {
+            "type": "string"
+          },
+          "settlement": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "buildingNumber": {
+            "type": "string"
+          },
+          "entrance": {
+            "type": "string"
+          },
+          "floor": {
+            "type": "string"
+          },
+          "apartment": {
+            "type": "string"
+          },
+          "docType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "documentIssuerName": {
+            "type": "string"
+          },
+          "documentValidDate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documentIssueDate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "documentCountry": {
+            "type": "string"
+          },
+          "documentCountryCode": {
+            "type": "string"
+          },
+          "identificationNumber": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "genderLatin": {
+            "type": "string"
+          },
+          "userGender": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "nationalityCountry": {
+            "type": "string"
+          },
+          "nationalityCountryCode": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "placeOfBirth": {
+            "type": "string"
+          }
+        }
+      },
+      "UserStatus": {
+        "type": "object",
+        "required": [
+          "identificationNumber",
+          "isIdentified"
+        ],
+        "properties": {
+          "identificationNumber": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "firstNameLatin": {
+            "type": "string"
+          },
+          "middleNameLatin": {
+            "type": "string"
+          },
+          "lastNameLatin": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "isIdentified": {
+            "type": "boolean"
+          },
+          "isRejected": {
+            "type": "boolean"
+          },
+          "isSupervised": {
+            "type": "boolean"
+          },
+          "isReadyToSign": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}
